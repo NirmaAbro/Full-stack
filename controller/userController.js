@@ -3,7 +3,7 @@ import { ErrorHandler } from "../middlewares/error.js";
 import User from "../models/userSchema.js";
 import { v2 as cloudinary } from "cloudinary";
 
-export const registerUser = catchAsyncErrors(async (req, res, next) => {
+export const register = catchAsyncErrors(async (req, res, next) => {
   try {
     const {
       name,
@@ -21,8 +21,8 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
     if (!name || !email || !phone || !address || !password || !role) {
       return next(new ErrorHandler("please enter all fields", 400));
     }
-    if (User === "jobseeker" && (!firstNiche || !secondNiche || !thirdNiche)) {
-      return next(new ErrorHandler("please provide your all niches", 400));
+    if (role === "jobseeker" && (!firstNiche || !secondNiche || !thirdNiche)) {
+      return next(new ErrorHandler("please provide your prefered all niches", 400));
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -53,8 +53,8 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
               folder: "job-seeker-resume",
             }
           );
-          if (!cloudinaryResponse || cloudinaryResponseerror) {
-            new ErrorHandler("cloudinary error", 400);
+          if (!cloudinaryResponse || cloudinaryResponse.error) {
+            return next(new ErrorHandler("cloudinary error", 400));
           }
           userData.resume = {
             public_id: cloudinaryResponse.public_id,

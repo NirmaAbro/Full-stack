@@ -12,13 +12,13 @@ const userSchema = new Mongoose.Schema({
     },
     email:{
         type:String,
-        required:[true,"Please Enter Your Email"],
+        required:true,
         unique:true,
         validate:[validator.isEmail,"Please Enter a valid Email"]
     },
     phone:{
         type:Number,
-        required:[true,"Please Enter Your Phone Number"],
+        required:true
     },
     address:{
         type:String,
@@ -57,5 +57,5 @@ const userSchema = new Mongoose.Schema({
     },
 });
 
-// export default userSchema
+
 export const User = Mongoose.model("User",userSchema)
